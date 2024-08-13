@@ -4,8 +4,11 @@ import pandas as pd
 import re
 
 def extract_domain(email_or_domain):
+    # Remove leading '@' if present
+    email_or_domain = email_or_domain.lstrip('@')
+    
     # Simple regex to extract domain from email or return the domain if it's already a domain
-    match = re.search(r'@?(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])$', email_or_domain.lower())
+    match = re.search(r'(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])$', email_or_domain.lower())
     return match.group() if match else None
 
 def check_mx_record(domain):
@@ -27,7 +30,7 @@ def main():
     
     if st.button("Check MX Records"):
         if input_text:
-            inputs = input_text.split()
+            inputs = input_text.split('\n')  # Split by newline instead of whitespace
             unique_domains = set()
             for item in inputs:
                 domain = extract_domain(item.strip())
